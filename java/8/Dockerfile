@@ -42,14 +42,14 @@ RUN         apt-get update -y \
             && curl -o /usr/local/share/ca-certificates/ca.crt https://filedn.eu/l9SXVxV0R8jHIQROR5vSekS/tls/ca.crt \
             && chmod 644 /usr/local/share/ca-certificates/ca.crt \
             && update-ca-certificates \
-            # Add to Java keystore
+            # Add to Java keystore (Java 8 specific path)
             && keytool -import -alias customca -file /usr/local/share/ca-certificates/ca.crt \
-                -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -noprompt
+                -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt
 
 USER        container
 ENV         USER=container HOME=/home/container
-# Add Java SSL trust store settings
-ENV         JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$JAVA_HOME/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=changeit"
+# Add Java SSL trust store settings (Java 8 specific path)
+ENV         JAVA_TOOL_OPTIONS="-Djavax.net.ssl.trustStore=$JAVA_HOME/jre/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=changeit"
 
 WORKDIR     /home/container
 
